@@ -1,6 +1,6 @@
 const axios = require('axios');
 const express = require('express');
-const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('11840/backendProjs-main/index.js');
+const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('10.104.20.104/backendProjs-main/index.js');
 const app = express();
 app.use(express.json());
 const port = 3000;
