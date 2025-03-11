@@ -3,8 +3,19 @@ const express = require('express');
 
 const CLOUD_URL = 'http://10.104.20.104:4000/api/models'; 
 
-const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('./model/index');
+async function fetchModels() {
+  try {
+    const response = await axios.get(CLOUD_URL); // ดึงข้อมูลจาก URL
+    // ในที่นี้ response.data คือข้อมูลที่ได้จากไฟล์ index.js
+    const { Sequelize, sequelize, Product, Order, Payment, Customer, MaterialProduct, Material, Delivery, Employees, Promotion } = response.data;
 
+    console.log('Models loaded:', Product, Order, Customer, etc); // ใช้ข้อมูลที่ได้
+  } catch (error) {
+    console.error('Error loading the file:', error);
+  }
+}
+
+fetchModels();
 const app = express();
 app.use(express.json());
 const port = 3000;
