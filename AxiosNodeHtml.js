@@ -1,6 +1,11 @@
 const axios = require('axios');
 const express = require('express');
-const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('https://10.104.20.104/index.js');
+import('https://10.104.20.104/ROOT/index.js')
+  .then((module) => {
+    const { Sequelize, sequelize, Product, Order, Payment, Customer, MaterialProduct, Material, Delivery, Employees, customerId, Promotion } = module;
+    console.log(Product); // ใช้ model ที่ดึงมา
+  })
+  .catch((error) => console.error('โหลดโมดูลไม่สำเร็จ:', error));
 const app = express();
 app.use(express.json());
 const port = 3000;
