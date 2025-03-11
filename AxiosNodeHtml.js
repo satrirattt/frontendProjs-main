@@ -1,11 +1,10 @@
 const axios = require('axios');
 const express = require('express');
-const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('https://10.104.20.104/ROOT/index.js');
+const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('https://10.104.20.104/index.js');
 const app = express();
 app.use(express.json());
 const port = 3000;
 
-const base_url = "http://node76888-nodeproject.proen.app.ruk-com.cloud:11840";
 // ตั้งค่าให้ Express ใช้ EJS
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
