@@ -1,7 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 
-const CLOUD_URL = 'http://10.104.20.104/';  // ใช้ URL ที่ถูกต้อง (เช่น http:// แทน https://)
+const CLOUD_URL = 'http://10.104.20.104:4000/api/models'; 
 
 async function fetchModels() {
   try {
