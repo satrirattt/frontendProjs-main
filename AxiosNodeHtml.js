@@ -1,20 +1,6 @@
 const axios = require('axios');
 const express = require('express');
-const CLOUD_URL = 'http://10.104.20.104/index.js';  // ใช้ URL ที่ถูกต้อง (เช่น http:// แทน https://)
-
-async function fetchModels() {
-  try {
-    const response = await axios.get(CLOUD_URL); // ดึงข้อมูลจาก URL
-    // ในที่นี้ response.data คือข้อมูลที่ได้จากไฟล์ index.js
-    const { Sequelize, sequelize, Product, Order, Payment, Customer, MaterialProduct, Material, Delivery, Employees, Promotion } = response.data;
-
-    console.log('Models loaded:', Product, Order, Customer, etc);
-  } catch (error) {
-    console.error('Error loading the file:', error);
-  }
-}
-
-fetchModels();
+const { Sequelize, sequelize, Product, Order, Payment, Customer ,MaterialProduct,Material,Delivery,Employees,customerId,Promotion} = require('./model/index');
 const app = express();
 app.use(express.json());
 const port = 3000;
