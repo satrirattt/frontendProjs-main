@@ -1,30 +1,31 @@
 {
-  "name": "projectbackend",
+  "name": "frontend-267wed",
   "version": "1.0.0",
-  "description": "project backend",
+  "description": "Repository for Front-End",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "format": "prettier --write *.js",
-    "dev": "nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirawatVry/FrontEnd-267WED.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "prettier": "^3.5.2"
+  "bugs": {
+    "url": "https://github.com/SirawatVry/FrontEnd-267WED/issues"
   },
+  "homepage": "https://github.com/SirawatVry/FrontEnd-267WED#readme",
   "dependencies": {
-    "cookie-parser": "^1.4.7",
+    "axios": "^1.8.2",
+    "body-parser": "^1.20.3",
+    "cor": "^0.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "format": "^0.2.2",
-    "mongoose": "^8.12.0",
-    "pg": "^8.13.3",
-    "sequelize": "^6.37.5",
+    "http": "^0.0.1-security",
+    "sequelize": "^6.37.6",
     "sqlite3": "^5.1.7"
   }
 }

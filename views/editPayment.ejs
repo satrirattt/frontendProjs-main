@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แก้ไขการชำระเงิน</title>
+    <style>
+        body {
+ font-family: 'Arial', sans-serif;
+ margin: 0;
+ padding: 0;
+ background-color: #f4f1eb;
+}
+
+/* โครงสร้างหลัก */
+.container {
+ display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+ width: 260px;
+ background-color: #6F4E37; /* โทนกาแฟ */
+ color: white;
+ height: 100vh;
+ padding: 20px;
+ box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar .logo {
+ font-size: 24px;
+ font-weight: bold;
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+.sidebar ul {
+ list-style-type: none;
+ padding: 0;
+}
+
+.sidebar ul li {
+ margin: 10px 0;
+}
+
+.sidebar ul li a {
+ text-decoration: none;
+ color: white;
+ display: block;
+ padding: 12px;
+ border-radius: 5px;
+ font-size: 16px;
+}
+
+.sidebar ul li a:hover {
+ background-color: #9C6B3B; /* โทนเข้มขึ้น */
+}
+
+/* ปุ่ม Logout */
+.logout {
+ color: #ffdddd;
+}
+
+.logout:hover {
+ background-color: #cc4444;
+}
+
+/* ส่วนเนื้อหา */
+.content {
+ flex-grow: 1;
+ padding: 30px;
+ text-align: center;
+}
+
+/* Styling for the table */
+table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-top: 20px;
+}
+
+table th, table td {
+ border: 1px solid #ddd;
+ padding: 10px;
+ text-align: left;
+}
+
+table th {
+ background-color: #f2f2f2;
+ color: #333;
+}
+
+table td {
+ background-color: #fff;
+}
+
+table tr:nth-child(even) {
+ background-color: #f9f9f9;
+}
+
+table a {
+ text-decoration: none;
+ color: #007bff;
+ margin-right: 10px;
+}
+
+table a:hover {
+ text-decoration: underline;
+}
+
+button {
+ padding: 5px 10px;
+ border: none;
+ background-color: #f44336;
+ color: white;
+ cursor: pointer;
+ font-size: 14px;
+ border-radius: 5px;
+}
+
+button:hover {
+ background-color: #d32f2f;
+}
+
+form {
+ display: inline;
+}
+
+h2 {
+ margin-top: 20px;
+ color: #333;
+}
+             .logo a {
+         font-size: 24px; /* ขนาดตัวอักษร */
+         font-weight: bold; /* หนักตัวอักษร */
+         text-decoration: none; /* ไม่มีเส้นใต้ */
+         color: #fff; /* สีข้อความ */
+         background-color: #d35400; /* สีพื้นหลัง */
+         padding: 10px 20px; /* เพิ่มพื้นที่รอบข้อความ */
+         border-radius: 5px; /* มุมโค้งมน */
+         display: inline-block; /* ให้แสดงในบล็อกเดียว */
+         transition: background-color 0.3s ease; /* การเปลี่ยนสีพื้นหลังเมื่อโฮเวอร์ */
+     }
+     .logo a:hover {
+         background-color: #e67e22; /* เปลี่ยนเป็นสีส้มอ่อนเมื่อโฮเวอร์ */
+     }
+
+     /* การจัดตำแหน่งให้ตรงกลาง */
+     .logo {
+         text-align: center; /* จัดกลาง */
+     }
+ </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <h2 class="logo">
+                <a href="/admin">☕ CoffeeAdmin</a>
+            </h2>
+            <ul>
+                <li><a href="/customers">🛍️ Customers</a></li>
+                <li><a href="/deliveries">🚚 Deliveries</a></li>
+                <li><a href="/employees">👨‍💼 Employees</a></li>
+                <li><a href="/payments">💳 Payments</a></li>
+                <li><a href="/products">📋 Products</a></li>
+                <li><a href="/promotions">🎁 Promotions</a></li>
+                <li><a href="/materials">📦 Materials</a></li>
+                <li><a href="/reports">📊 Reports</a></li>
+                <li><a href="/" class="logout">🔑 Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+        <h1>แก้ไขการชำระเงิน</h1>
+        <form action="/payments/edit/<%= payment.Payment_ID %>" method="POST">
+            <label for="type">ประเภทการชำระเงิน:</label>
+            <select id="type" name="type" required>
+                <option value="Bank Transfer" <%= payment.Payment_Type === 'Bank Transfer' ? 'selected' : '' %>>Bank Transfer</option>
+                <option value="COD" <%= payment.Payment_Type === 'COD' ? 'selected' : '' %>>COD</option>
+            </select>
+                <label for="amount">จำนวนเงิน:</label>
+                <input type="number" id="amount" name="amount" value="<%= payment.Payment_Amount %>" required>
+                <label for="date">วันที่:</label>
+                <input type="date" id="date" name="date" value="<%= payment.Payment_Date.toISOString().split('T')[0] %>" required>
+                <label for="status">สถานะ:</label>
+                <select id="status" name="status" required>
+                <option value="completed" <%= payment.Payment_Status === 'completed' ? 'selected' : '' %>>completed</option>
+                <option value="pending" <%= payment.Payment_Status === 'pending' ? 'selected' : '' %>>pending</option>
+                <option value="failed" <%= payment.Payment_Status === 'failed' ? 'selected' : '' %>>failed</option>
+                </select>
+                <label for="orderId">รหัสคำสั่งซื้อ:</label>
+                <input type="text" id="orderId" name="orderId" value="<%= payment.Payment_Order_ID %>" required><br><br>
+                <button type="submit">บันทึกการเปลี่ยนแปลง</button><br><br>
+                <a href="/payments">กลับไปยังรายการการชำระเงิน</a>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>

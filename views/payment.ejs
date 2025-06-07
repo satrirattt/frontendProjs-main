@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Your Order</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f1eb;
+        }
+    </style>
+</head>
+<body class="bg-[#f5e9d7] text-black">
+    <header class="flex justify-between items-center p-4 bg-[#4A3A2F] text-white">
+        <div class="text-2xl font-bold">Coffee House</div>
+    </header>
+    <main class="flex flex-col lg:flex-row p-8">
+        <div class="lg:w-2/3">
+            <h1 class="text-3xl font-bold mb-8">Your Order</h1>
+            <!-- Order Items -->
+            <div id="order-items" class="mb-8">
+                <div class="flex items-center mb-4 border-b pb-4" id="product-<%= product.Product_ID %>">
+                    <img alt="<%= product.Product_Name %>" class="w-24 h-24 object-cover mr-4" src="/uploads/<%= product.Product_image %>" />
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold"><%= product.Product_Name %></span>
+                            <span class="product-price text-lg font-bold"><%= product.Product_Price %> B</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <div class="flex items-center">
+                                <span class="px-4 py-1 bg-white-200 rounded-full text-center"><%= quantity %></span>
+                                <span class="ml-2">Cup</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Promotion Code Input -->
+            <div class="flex justify-between mb-4">
+                <input id="promotion-code" class="border border-gray-300 px-4 py-2 rounded w-2/3" placeholder="Enter promotion code" type="text"/>
+                <button class="bg-yellow-600 text-white px-4 py-2 rounded" onclick="applyPromotion()">Apply</button>
+            </div>
+            <!-- Order Summary -->
+            <div class="border-t border-gray-300 pt-4">
+                <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                <div class="flex justify-between mb-2">
+                    <span>Subtotal:</span>
+                    <span id="subtotal"><%= product.Product_Price * quantity %> B</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span>Discount:</span>
+                    <span id="discount">0 B</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span>Delivery:</span>
+                    <span>30 B</span>
+                </div>
+                <div class="flex justify-between font-bold">
+                    <span>Total:</span>
+                    <span id="total"><%= totalPrice %> B</span>
+                </div>
+            </div>
+
+            <!-- Payment Methods Section -->
+            <div class="mt-8">
+                <h2 class="text-xl font-bold mb-4">Choose Payment Method</h2>
+                <div class="flex space-x-4">
+                    <label>
+                        <input type="radio" name="paymentType" value="Bank Transfer" checked> Bank Transfer
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="COD"> Cash on Delivery
+                    </label>
+                </div>
+
+                <div id="payment-info" class="mt-4">
+                    <!-- Payment info will be displayed here -->
+                </div>
+            </div>
+
+            <form id="payment-form" onsubmit="handlePayment(event)">
+                <button type="submit" class="px-6 py-2 bg-yellow-600 text-white rounded-full">Payment</button>
+            </form>
+        </div>
+        <div class="lg:w-1/3 flex justify-center items-center mt-8 lg:mt-0">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold">COOL DRINK HUB</h1>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let discountPercentage = 0; // Store the discount percentage
+        let productPrice = <%= product.Product_Price %>; // Get the product price from the server
+        let quantity = <%= quantity %>; // Get the quantity from the server
+
+        function updateTotal() {
+            const subtotal = productPrice * quantity;
+            const discountAmount = (subtotal * discountPercentage) / 100;
+            const delivery = 30; // Example delivery fee
+            const total = subtotal - discountAmount + delivery;
+
+            document.getElementById('subtotal').innerText = subtotal + ' B';
+            document.getElementById('discount').innerText = discountAmount + ' B';
+            document.getElementById('total').innerText = total + ' B';
+        }
+
+        function applyPromotion() {
+            const promotionCode = document.getElementById('promotion-code').value;
+
+            fetch(`/validate-promotion?code=${promotionCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        discountPercentage = data.discount; // Update discount percentage
+                        alert(`Promotion applied! You get a ${data.discount}% discount.`);
+                        updateTotal(); // Recalculate totals
+                    } else {
+                        alert('Invalid promotion code.');
+                    }
+                });
+        }
+
+        function updateQuantity(productId, change) {
+            const quantityElement = document.querySelector(`#product-${productId} .quantity`);
+            quantity += change;
+            if (quantity < 1) {
+                quantity = 1; // Prevent quantity from going below 1
+            }
+
+            quantityElement.innerText = quantity;
+            updateTotal(); // Update the total whenever quantity changes
+        }
+
+        function removeProduct(productId) {
+            const productElement = document.getElementById(`product-${productId}`);
+            productElement.remove();
+            updateTotal(); // Update the total after removing the product
+        }
+
+        function selectPaymentMethod(method) {
+            const paymentInfoDiv = document.getElementById('payment-info');
+            if (method === 'Bank Transfer') {
+                paymentInfoDiv.innerHTML = `
+                    <p>Please transfer the total amount to the following bank account:</p>
+                    <ul>
+                        <li>Bank Name: Example Bank</li>
+                        <li>Account Number: 123-456-789</li>
+                        <li>Account Name: Cool Drink Hub</li>
+                    </ul>
+                    <p>After the transfer, please upload a receipt to complete your payment.</p>
+                `;
+            } else if (method === 'COD') {
+                paymentInfoDiv.innerHTML = `                    <p>You have selected "Cash on Delivery". Please have the total amount ready when the delivery arrives.</p>
+                `;
+            }
+        }
+
+        function handlePayment(event) {
+            event.preventDefault(); // Prevent the default form submission
+            console.log('Payment button clicked'); // Check if the code reaches this point
+
+            const productId = <%= product.Product_ID %>;
+            const quantity = <%= quantity %>;
+            const totalPrice = <%= totalPrice %>;
+            const paymentType = document.querySelector('input[name="paymentType"]:checked').value; // Get the selected payment type
+            const promotionCode = document.getElementById('promotion-code').value; // Get the promotion code
+            const customerId = <%= customerId %>;
+
+            // Send data to the server
+            axios.post('/process-payment', {
+                productId,
+                quantity,
+                paymentType,
+                promotionCode,
+                customerId // ส่ง customerId ไปด้วย
+            })
+            .then(response => {
+                console.log('Payment successful:', response);
+                alert('Payment successful!');
+                window.location.href = `/?customerId=${customerId}`; 
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    // Handle insufficient materials error
+                    const insufficientMaterials = error.response.data.insufficientMaterials;
+                    let message = 'Insufficient materials for the following items:\n';
+                    insufficientMaterials.forEach(item => {
+                        message += `Material ID: ${item.materialId}, Required: ${item.required}, Available: ${item.available}\n`;
+                    });
+                    alert(message);
+                } else {
+                    console.error('Error processing payment:', error);
+                    alert('Error processing payment');
+                }
+            });
+        }
+
+        // Call this once on page load to initialize totals
+        updateTotal();
+    </script>
+</body>
+</html>
